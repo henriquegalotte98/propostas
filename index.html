@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Proposta | App Câmera de Ação</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
+            color: #0a0c15;
+            line-height: 1.4;
+            padding: 20px 16px 56px;
+        }
+
+        .container {
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 36px;
+            padding: 24px 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            transition: all 0.2s;
+        }
+
+        .card-highlight {
+            background: white;
+            box-shadow: 0 20px 32px -12px rgba(220, 38, 38, 0.12);
+            border-left: 3px solid #dc2626;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fee2e2;
+            color: #b91c1c;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 60px;
+            letter-spacing: -0.2px;
+        }
+
+        .badge-light {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .price-tag {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1;
+        }
+
+        .price-small {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .btn-primary {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 6px 14px rgba(220, 38, 38, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            background: #b91c1c;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff0f0;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dc2626;
+            font-size: 1.2rem;
+        }
+
+        .grid-2cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        hr {
+            margin: 18px 0;
+            border: 0;
+            height: 1px;
+            background: #edf2f7;
+        }
+
+        /* Mockup horizontal (esboço do app) */
+        .mock-horizontal {
+            background: #0f172a;
+            border-radius: 36px;
+            padding: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.3);
+        }
+
+        .mock-screen-landscape {
+            background: #111827;
+            border-radius: 28px;
+            padding: 14px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .preview-area {
+            background: #1e293b;
+            border-radius: 24px;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        .crosshair-landscape {
+            position: relative;
+            width: 64px;
+            height: 64px;
+        }
+        .crosshair-landscape::before,
+        .crosshair-landscape::after {
+            content: '';
+            position: absolute;
+            background: #ff3b30;
+            box-shadow: 0 0 0 1px rgba(255,59,48,0.3);
+        }
+        .crosshair-landscape::before {
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            transform: translateY(-50%);
+        }
+        .crosshair-landscape::after {
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            transform: translateX(-50%);
+        }
+        .center-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            background: #ff3b30;
+            border-radius: 10px;
+            transform: translate(-50%, -50%);
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .ctrl-badge {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            padding: 6px 16px;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .extra-tools {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+        .tool-chip {
+            background: rgba(255,255,255,0.08);
+            border-radius: 28px;
+            padding: 5px 12px;
+            font-size: 0.7rem;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .small-note {
+            font-size: 0.7rem;
+            color: #5b6e8c;
+        }
+
+        @media (max-width: 520px) {
+            .grid-2cols {
+                gap: 12px;
+            }
+            .card {
+                padding: 20px 16px;
+            }
+            .price-tag {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    
+    <!-- Título principal -->
+    <div style="text-align: center; margin-bottom: 12px;">
+        <div class="badge" style="background:#eef2ff; color:#1e3a8a; margin-bottom: 10px;">
+            <i class="fas fa-camera-retro"></i> Action Cam WiFi · Controle profissional
+        </div>
+        <h1 style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.02em;">Enquadramento preciso<br>controle total</h1>
+        <p style="color: #334155; margin-top: 8px;">App sob medida com guias visuais, exportação de arquivos e recursos avançados.</p>
+    </div>
+
+    <!-- ESBOÇO HORIZONTAL DO APP (visualização) -->
+    <div class="mock-horizontal">
+        <div class="mock-screen-landscape">
+            <div class="preview-area">
+                <div class="crosshair-landscape">
+                    <div class="center-dot"></div>
+                </div>
+                <div style="position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.5); border-radius: 30px; padding: 4px 10px; font-size: 11px; color:white;">
+                    <i class="fas fa-circle" style="color:#ef4444; font-size: 8px;"></i> REC
+                </div>
+            </div>
+            <div class="controls-row">
+                <span class="ctrl-badge"><i class="fas fa-play"></i> Gravar</span>
+                <span class="ctrl-badge"><i class="fas fa-pause"></i> Pausar</span>
+                <span class="ctrl-badge"><i class="fas fa-download"></i> Exportar</span>
+                <span class="ctrl-badge"><i class="fas fa-camera"></i> Foto</span>
+            </div>
+            <div class="extra-tools">
+                <span class="tool-chip"><i class="far fa-clock"></i> Temporizador 3s/10s</span>
+                <span class="tool-chip"><i class="fas fa-search-plus"></i> Zoom digital</span>
+                <span class="tool-chip"><i class="fas fa-battery-three-quarters"></i> 87%</span>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 12px; margin-top: 4px;">
+                <span class="tool-chip" style="background:#dc262620; color:#ffccc7;"><i class="fas fa-adjust"></i> Cruz/Ponto/Mira</span>
+                <span class="tool-chip"><i class="fas fa-palette"></i> Cor + opacidade</span>
+            </div>
+        </div>
+        <p class="small-note" style="text-align: center; margin-top: 10px; color:#94a3b8;"><i class="fas fa-mobile-alt"></i> Interface horizontal com guia de enquadramento e atalhos</p>
+    </div>
+
+    <!-- Funcionalidades completas (incluindo as novas) -->
+    <div class="card">
+        <div class="flex-between" style="margin-bottom: 14px;">
+            <h3 style="font-weight: 700; font-size: 1.3rem;"><i class="fas fa-crown" style="color:#dc2626; font-size: 1.2rem;"></i> Pacote completo</h3>
+            <span class="badge">tudo incluso</span>
+        </div>
+        <div class="grid-2cols">
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="feature-icon"><i class="fas fa-crosshairs"></i></div>
+                <div><strong>Guias de enquadramento</strong><div class="small-note">Cruz + / Ponto ● / Círculo ○ / Mira ⨁<br>Opacidade • cor • tamanho</div></div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="feature-icon"><i class="fas fa-video"></i></div>
+                <div><strong>Gravação inteligente</strong><div class="small-note">Iniciar, pausar, retomar + indicador visual</div></div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                <div><strong>Temporizador</strong><div class="small-note">Contagem regressiva para gravação/foto</div></div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="feature-icon"><i class="fas fa-camera"></i></div>
+                <div><strong>Modo foto</strong><div class="small-note">Captura instantânea com guia de enquadramento</div></div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="feature-icon"><i class="fas fa-battery-full"></i></div>
+                <div><strong>Bateria da câmera</strong><div class="small-note">Nível em tempo real na interface</div></div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="feature-icon"><i class="fas fa-search-plus"></i></div>
+                <div><strong>Zoom digital</strong><div class="small-note">Ajuste fino durante preview</div></div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="feature-icon"><i class="fas fa-folder-open"></i></div>
+                <div><strong>Gerenciar arquivos</strong><div class="small-note">Listar vídeos/fotos, exportar para o celular</div></div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="feature-icon"><i class="fas fa-wifi"></i></div>
+                <div><strong>Conexão WiFi</strong><div class="small-note">Automática, salva credenciais, status em tempo real</div></div>
+            </div>
+        </div>
+        <hr>
+        <div class="flex-between">
+            <span><i class="fas fa-code"></i> Código-fonte incluso</span>
+            <span class="badge-light badge" style="background:#e9f5e9; color:#2b6e2b;">entregue integralmente</span>
+        </div>
+    </div>
+
+    <!-- INVESTIMENTO ÚNICO -->
+    <div class="card card-highlight">
+        <div class="flex-between" style="margin-bottom: 6px;">
+            <span class="badge" style="background:#dc2626; color:white;">✓ valor fechado</span>
+            <span style="font-size: 0.75rem; background:#f1f5f9; padding:2px 12px; border-radius: 30px;">30 dias de suporte incluso</span>
+        </div>
+        <div class="flex-between" style="align-items: baseline; flex-wrap: wrap; gap: 8px;">
+            <div><span class="price-tag">R$ 560</span> <span class="price-small">à vista</span></div>
+            <div style="background: #fef2e8; padding: 6px 14px; border-radius: 40px; font-weight: 500; font-size:0.8rem;"><i class="fas fa-bolt"></i> sem taxas extras</div>
+        </div>
+        <hr>
+        <ul style="list-style: none; margin: 4px 0 0 0;">
+            <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color:#16a34a; width: 24px;"></i> App Android completo com todas as features (temporizador, modo foto, bateria, zoom)</li>
+            <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color:#16a34a;"></i> Instalação/configuração no seu celular + manual</li>
+            <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color:#16a34a;"></i> Código-fonte 100% seu — sem surpresas</li>
+            <li><i class="fas fa-check-circle" style="color:#16a34a;"></i> 30 dias para correções, ajustes e suporte direto</li>
+        </ul>
+        <div style="margin-top: 18px;">
+            <div class="grid-2cols" style="gap: 12px;">
+                <div><i class="fas fa-credit-card"></i> Pix / Transferência</div>
+                <div><i class="fas fa-mobile-alt"></i> Entrega via APK + fonte</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Funcionalidades extras não inclusas? Nenhuma: tudo incluso, mas deixamos claro que novas ideias podem ser adicionadas futuramente -->
+    <div class="card">
+        <div class="flex-between">
+            <h3 style="font-weight: 700;"><i class="fas fa-rocket"></i> Tudo pronto para uso</h3>
+            <span class="badge badge-light">sem mensalidade</span>
+        </div>
+        <p style="margin: 10px 0 4px;">O app entrega todas as features desde o primeiro momento. Caso queira novas funções no futuro (ex: controle por voz, integração com nuvem), podemos desenvolver sob demanda com valor único por feature.</p>
+        <div class="flex-between" style="background: #f8fafc; border-radius: 32px; padding: 12px 16px; margin-top: 12px;">
+            <span><strong>Nova funcionalidade personalizada</strong><br><span class="small-note">pós-entrega (se desejar)</span></span>
+            <span style="font-weight: 800; font-size: 1.3rem;">R$ 100</span>
+        </div>
+    </div>
+
+    <!-- Custos de lojas e manutenção para cliente -->
+    <div class="card">
+        <h3 style="font-weight: 700; margin-bottom: 12px;"><i class="fas fa-store"></i> Publicação nas lojas (opcional)</h3>
+        <div class="grid-2cols" style="margin-bottom: 8px;">
+            <div style="background:#f8fafc; border-radius: 28px; padding: 12px; text-align: center;">
+                <i class="fab fa-google-play" style="font-size: 1.8rem;"></i>
+                <div><strong>Google Play</strong></div>
+                <div>US$ 25 <span class="small-note">(único)</span></div>
+                <div class="small-note">Não obrigatório — o app roda via APK</div>
+            </div>
+            <div style="background:#f8fafc; border-radius: 28px; padding: 12px; text-align: center;">
+                <i class="fab fa-apple" style="font-size: 1.8rem;"></i>
+                <div><strong>Apple App Store</strong></div>
+                <div>US$ 99 <span class="small-note">/ano</span></div>
+                <div class="small-note">Somente se quiser versão iOS futura</div>
+            </div>
+        </div>
+        <p class="small-note" style="margin-top: 8px;"><i class="fas fa-info-circle"></i> O app Android funciona independente de loja. Instalamos manualmente sem custo adicional.</p>
+    </div>
+
+    <!-- iOS de forma clara e objetiva -->
+    <div class="card">
+        <div class="flex-between">
+            <h3 style="font-weight: 700;"><i class="fab fa-apple"></i> Versão iOS — quando quiser</h3>
+            <span class="badge badge-light">expansão futura</span>
+        </div>
+        <p style="margin: 8px 0;">Código atual já é multiplataforma, permitindo adaptação rápida para iPhone. Podemos fazer a portabilidade quando desejar.</p>
+        <div style="background:#fef2f2; border-radius: 28px; padding: 12px 16px; margin: 12px 0 6px;">
+            <div class="flex-between">
+                <span><i class="fas fa-laptop"></i> Compilação e testes</span>
+                <span class="small-note">Mac ou servidor cloud (R$ 20~50 por uso)</span>
+            </div>
+        </div>
+        <div class="flex-between" style="margin-top: 12px; background: #0f172a; border-radius: 60px; padding: 12px 18px; color: white;">
+            <span><i class="fas fa-exchange-alt"></i> Portabilidade iOS (app completo)</span>
+            <span style="font-weight: 800; font-size: 1.2rem;">R$ 300</span>
+        </div>
+        <p class="small-note" style="margin-top: 10px;">Valor inclui build, publicação na App Store e 30 dias de suporte para a versão iOS.</p>
+    </div>
+
+    <!-- Suporte pós-entrega -->
+    <div class="card">
+        <h3><i class="fas fa-life-ring"></i> Suporte e confiança</h3>
+        <div class="grid-2cols" style="margin-top: 14px;">
+            <div><i class="fas fa-calendar-check"></i> <strong>Primeiros 30 dias</strong><br><span class="small-note">Correção de bugs, pequenos ajustes, atendimento direto</span></div>
+            <div><i class="fas fa-chart-line"></i> <strong>Após 30 dias</strong><br><span class="small-note">Suporte sob demanda: R$ 50/hora</span></div>
+        </div>
+        <hr>
+        <div class="flex-between">
+            <span><i class="fas fa-cogs"></i> Criação de novas features (pós-entrega)</span>
+            <span style="font-weight: 700;">R$ 100 / cada</span>
+        </div>
+        <p class="small-note" style="margin-top: 10px;">Você escolhe o que deseja adicionar depois, sem compromisso.</p>
+    </div>
+
+    <!-- Entregáveis finais -->
+    <div class="card">
+        <div class="flex-between">
+            <h3><i class="fas fa-boxes"></i> Entregas</h3>
+            <i class="fas fa-check-double" style="color:#2b6e2b;"></i>
+        </div>
+        <ul style="margin-top: 12px; list-style: none;">
+            <li><i class="fas fa-check-circle" style="color:#16a34a; width: 24px;"></i> APK pronto para instalar (Android)</li>
+            <li><i class="fas fa-check-circle" style="color:#16a34a;"></i> Código-fonte completo</li>
+            <li><i class="fas fa-check-circle" style="color:#16a34a;"></i> Manual de uso e conexão WiFi</li>
+            <li><i class="fas fa-check-circle" style="color:#16a34a;"></i> Instalação remota assistida</li>
+        </ul>
+    </div>
+
+    <!-- Botão de chamada direta sem "próximos passos" -->
+    <div style="margin-top: 8px; margin-bottom: 8px;">
+        
+        <p class="small-note" style="text-align: center; margin-top: 14px;">Pagamento à vista via Pix | 30 dias de suporte incluso | código fonte entregue</p>
+    </div>
+
+    <div class="small-note" style="text-align: center; margin-top: 16px;">
+        <i class="fas fa-shield-alt"></i> Desenvolvimento sob medida · garantia de funcionamento na sua câmera
+    </div>
+</div>
+
+
+</body>
+</html>
